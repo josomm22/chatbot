@@ -3,6 +3,7 @@ This is the template server side for ChatBot
 """
 from bottle import route, run, template, static_file, request
 import json
+from botlogic import botlogic
 
 
 @route('/', method='GET')
@@ -12,8 +13,10 @@ def index():
 
 @route("/chat", method='POST')
 def chat():
+    persistence = 1
     user_message = request.POST.get('msg')
-    return json.dumps({"animation": "inlove", "msg": user_message})
+    botresponse = botlogic(user_message, persistence)
+    return json.dumps({"animation": "inlove", "msg": botresponse})
 
 
 @route("/test", method='POST')

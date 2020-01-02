@@ -14,6 +14,8 @@ def index():
 @route("/chat", method='POST')
 def chat():
     global topic_dict
+    if topic_dict['value'] is 0:
+        topic_dict['value'] = 1
     print(topic_dict['name'])
     user_message = request.POST.get('msg')
     botresponse,animation, newTopic = botlogic(user_message, topic_dict['value'])

@@ -14,10 +14,11 @@ def index():
 @route("/chat", method='POST')
 def chat():
     global topic_dict
+    print(topic_dict['name'])
     user_message = request.POST.get('msg')
-    botresponse, newTopic = botlogic(user_message, topic_dict['value'])
+    botresponse,animation, newTopic = botlogic(user_message, topic_dict['value'])
     topic_dict['value'] = newTopic
-    return json.dumps({"animation": "inlove", "msg": botresponse})
+    return json.dumps({"animation": animation, "msg": botresponse})
 
 
 @route("/test", method='POST')

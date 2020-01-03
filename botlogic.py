@@ -1,5 +1,6 @@
 import random
 from api import catFact, jokes, getWeather
+from restaurant import getRestaurant, resto_query
 # string = input('say something')
 
 topic_dict = {'value': 0 , 'name':''}
@@ -12,7 +13,7 @@ def botlogic(string,topic):
         2: howDoYouDo(phrase_list),
         3: jokeOrCats(phrase_list),
         4: news_weather_resto(phrase_list),
-        #5: startOver(phrase_list)
+        5: restaurant(phrase_list)
     }
     if noNoWordsDetector(phrase_list):
         response = noNoWordsDetector(phrase_list)
@@ -64,36 +65,74 @@ def jokeOrCats(wordslist):
     joke = ['joke','jokes','funny','laugh']
     emote = 'laughing'
     nextTopic = 4
+    outro = 'So what would you like to do now?\
+         \n Hear the latest news, find a good restaurant or get the weather?' 
     if any(x in wordslist for x in cats):
-        response = catFact()
+        response = catFact() + outro
         emote = 'dog'
     elif any(x in wordslist for x in joke):
-        response = jokes()
+        response = jokes() + outro
     else: 
         response = 'its either cats or a joke'
         nextTopic = 3
-    return response+'\n' 'So what would you like to do now?\
-         \n Hear the latest news, find a good restaurant or get the weather?' \
-         , emote, nextTopic
+    return response, emote, nextTopic
 
 def news_weather_resto(wordslist):
     news = ['news','info','events']
     weather = ['weather','temp','rain', 'sunny', 'sun' ]
     resto = ['restaurant','resturant','resto','food','hungry']
+    next_topic = 4
     if any(x in wordslist for x in news):
-        response = 'all is good'
+        response = 'no news today'
         emote = 'takeoff'
     elif any(x in wordslist for x in weather):
         response = getWeather()
         print(response)
         emote = 'takeoff'
     elif any(x in wordslist for x in resto):
-        response = 'all is food'
+        response = restaurant(wordslist)
+        next_topic = 5
         emote = 'takeoff'
     else:
         response = 'restaurant, weather or news, nobody is keeping you here '
         emote = 'money'
-    return response, emote,4
+    return response, emote, next_topic
+
+def restaurant(wordslist):
+    global resto_query
+    if resto_query['start'] is False:
+        response = 'how many people will you be dining with?'
+        resto_query['start'] = True
+    elif resto_query['amount_people'] is None:
+        standard_resp = 'Do you keep kosher(yes or no)?'
+        if isinstance(wordslist[0], int):
+            amount = wordslist[0]
+            resto_query['amount_people'] = amount
+            response = standard_resp
+        elif isinstance(wordslist[-1],int):
+            amount = wordslist[-1]
+            resto_query['amount_people'] = amount
+            response = standard_resp
+        else: response = 'please enter a whole number'
+        # return response
+    elif resto_query['kashrut'] is None:
+        standard_resp = 'what style of food do you like(salad, bistro, fast-food)?'
+        if wordslist[0] is 'yes' or wordslist[0] is 'y':
+            resto_query['kashrut'] = True
+            response = standard_resp
+        if wordslist[0] is 'no' or wordslist[0] is 'n':
+            resto_query['kashrut'] = False
+            response = standard_resp
+    elif resto_query['style'] is None:
+        resto_query['style'] = wordslist[0]
+        response = getRestaurant(resto_query)
+        # return response
+    
+    
+    return response
+
+        
+
 
 def noNoWordsDetector(wordslist):
     noNoWords = {

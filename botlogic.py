@@ -5,15 +5,15 @@ from restaurant import getRestaurant, resto_query
 
 topic_dict = {'value': 0 , 'name':''}
 
-def botlogic(string,topic):
+def switcher_func(string,topic):
     string = string.lower()
     phrase_list = string.split()
     switcher = {
-        1: greeting(phrase_list),
-        2: howDoYouDo(phrase_list),
-        3: jokeOrCats(phrase_list),
-        4: news_weather_resto(phrase_list),
-        5: restaurant(phrase_list)
+        1: greeting(phrase_list, topic),
+        2: howDoYouDo(phrase_list, topic),
+        3: jokeOrCats(phrase_list, topic),
+        4: news_weather_resto(phrase_list, topic),
+        5: restaurant(phrase_list, topic)
     }
     if noNoWordsDetector(phrase_list):
         response = noNoWordsDetector(phrase_list)
@@ -22,7 +22,7 @@ def botlogic(string,topic):
     else: response,animation, newTopic = switcher.get(topic)
     return response,animation, newTopic
     
-def greeting(wordslist):
+def greeting(wordslist, topic):
     emote = 'inlove'
     if len(wordslist) == 1:
         name = wordslist[0]
@@ -41,7 +41,7 @@ def greeting(wordslist):
     return response,emote,2
 
 
-def howDoYouDo(wordslist):
+def howDoYouDo(wordslist, topic):
     good = ['great','happy','good','ok']
     bad = ['not','sad','upset','bad','down']
     name = topic_dict['name']
@@ -59,7 +59,7 @@ def howDoYouDo(wordslist):
         nextTopic = 2
     return response,emote,nextTopic
 
-def jokeOrCats(wordslist):
+def jokeOrCats(wordslist, topic):
     response = ''
     cats = ['cats','cat','kitten','kitty']
     joke = ['joke','jokes','funny','laugh']
@@ -77,7 +77,8 @@ def jokeOrCats(wordslist):
         nextTopic = 3
     return response, emote, nextTopic
 
-def news_weather_resto(wordslist):
+def news_weather_resto(wordslist, topic):
+    # print('ping weather')
     news = ['news','info','events']
     weather = ['weather','temp','rain', 'sunny', 'sun' ]
     resto = ['restaurant','resturant','resto','food','hungry']
@@ -90,46 +91,54 @@ def news_weather_resto(wordslist):
         print(response)
         emote = 'takeoff'
     elif any(x in wordslist for x in resto):
-        response = restaurant(wordslist)
-        next_topic = 5
-        emote = 'takeoff'
+        response, emote, next_topic = restaurant(wordslist, 5)
     else:
         response = 'restaurant, weather or news, nobody is keeping you here '
         emote = 'money'
     return response, emote, next_topic
 
-def restaurant(wordslist):
+def restaurant(wordslist, topic):
+    # print('ping resto')
     global resto_query
-    if resto_query['start'] is False:
-        response = 'how many people will you be dining with?'
-        resto_query['start'] = True
-    elif resto_query['amount_people'] is None:
-        standard_resp = 'Do you keep kosher(yes or no)?'
-        if isinstance(wordslist[0], int):
-            amount = wordslist[0]
-            resto_query['amount_people'] = amount
-            response = standard_resp
-        elif isinstance(wordslist[-1],int):
-            amount = wordslist[-1]
-            resto_query['amount_people'] = amount
-            response = standard_resp
-        else: response = 'please enter a whole number'
-        # return response
-    elif resto_query['kashrut'] is None:
-        standard_resp = 'what style of food do you like(salad, bistro, fast-food)?'
-        if wordslist[0] is 'yes' or wordslist[0] is 'y':
-            resto_query['kashrut'] = True
-            response = standard_resp
-        if wordslist[0] is 'no' or wordslist[0] is 'n':
-            resto_query['kashrut'] = False
-            response = standard_resp
-    elif resto_query['style'] is None:
-        resto_query['style'] = wordslist[0]
-        response = getRestaurant(resto_query)
-        # return response
-    
-    
-    return response
+    emote = 'money'
+    next_topic = 5
+    print(resto_query)
+    print(resto_query['start'])
+    if topic is not 5:
+        pass
+    else:
+        if resto_query['start'] is False:
+            response = 'how many people will you be dining with?'
+            resto_query['start'] = True
+        elif resto_query['amount_people'] is None:
+            standard_resp = 'Do you keep kosher(yes or no)?'
+            if isinstance(int(wordslist[0]), int):
+                amount = int(wordslist[0])
+                resto_query['amount_people'] = amount
+                response = standard_resp
+            elif isinstance(int(wordslist[-1]),int):
+                amount =int(wordslist[-1])
+                resto_query['amount_people'] = amount
+                response = standard_resp
+            else: response = 'please enter a whole number'
+            # return response
+        elif resto_query['kashrut'] is None:
+            standard_resp = 'what style of food do you like(salad, bistro, fast-food)?'
+            print(wordslist[0])
+            if 'yes' in wordslist:
+                resto_query['kashrut'] = True
+                response = standard_resp
+            elif 'no' in wordslist:
+                resto_query['kashrut'] = False
+                response = standard_resp
+            else: response = 'its a simple yes or no question'
+        elif resto_query['style'] is None:
+            resto_query['style'] = wordslist[0]
+            print(resto_query)
+            response = getRestaurant(resto_query)
+        
+        
+        return response, emote, next_topic
 
         
 

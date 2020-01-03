@@ -22,6 +22,11 @@ ChatBot.start = function () {
         ChatBot.bindErrorHandlers();
         ChatBot.initSpeechConfig();
         ChatBot.bindUserActions();
+        // $.post(ChatBot.SERVER_PATH + "/intro", {"msg": chatInput.val()}, function (result) {
+        //     if (typeof result != "undefined" && "msg" in result) {
+        //         ChatBot.setAnimation(result.animation);
+        //         ChatBot.write(result.msg, "boto");
+        //     }
         ChatBot.write("Hello, My name is Boto. What is yours?", "boto");
     });
 };

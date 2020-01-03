@@ -1,5 +1,5 @@
 import random
-from api import catFact, jokes
+from api import catFact, jokes, getWeather
 # string = input('say something')
 
 topic_dict = {'value': 0 , 'name':''}
@@ -77,14 +77,15 @@ def jokeOrCats(wordslist):
          , emote, nextTopic
 
 def news_weather_resto(wordslist):
-    news = ['news']
+    news = ['news','info','events']
     weather = ['weather','temp','rain', 'sunny', 'sun' ]
-    resto = ['restaurant']
+    resto = ['restaurant','resturant','resto','food','hungry']
     if any(x in wordslist for x in news):
         response = 'all is good'
         emote = 'takeoff'
     elif any(x in wordslist for x in weather):
-        response = 'all is rain'
+        response = getWeather()
+        print(response)
         emote = 'takeoff'
     elif any(x in wordslist for x in resto):
         response = 'all is food'

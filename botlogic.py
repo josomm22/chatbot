@@ -13,7 +13,8 @@ def switcher_func(string,topic):
         2: howDoYouDo(phrase_list, topic),
         3: jokeOrCats(phrase_list, topic),
         4: news_weather_resto(phrase_list, topic),
-        5: restaurant(phrase_list, topic)
+        5: restaurant(phrase_list, topic),
+        6: something(phrase_list,topic)
     }
     if noNoWordsDetector(phrase_list):
         response = noNoWordsDetector(phrase_list)
@@ -82,18 +83,24 @@ def news_weather_resto(wordslist, topic):
     news = ['news','info','events']
     weather = ['weather','temp','rain', 'sunny', 'sun' ]
     resto = ['restaurant','resturant','resto','food','hungry']
+    followUp = [ 'else','nothing','done']
     next_topic = 4
     if any(x in wordslist for x in news):
         intro = 'here\'s today\'s headline from the New York Times: '
-        outro = ' would you like to find a restaurant '
+        outro = ' would you like to find a restaurant, get the weather or do something else?'
         response = intro + getNews()
         emote = 'takeoff'
     elif any(x in wordslist for x in weather):
+        outro = ' Would you like to get the news, find a restaurant or do something else?'
         response = getWeather()
         print(response)
         emote = 'takeoff'
     elif any(x in wordslist for x in resto):
         response, emote, next_topic = restaurant(wordslist, 5)
+    elif any(x in wordslist for x in followUp):
+        response = 'well I\'m not really programmed to do anything else'
+        emote = 'dancing'
+        next_topic = 6
     else:
         response = 'restaurant, weather or news, nobody is keeping you here '
         emote = 'money'
@@ -104,8 +111,8 @@ def restaurant(wordslist, topic):
     global resto_query
     emote = 'money'
     next_topic = 5
-    print(resto_query)
-    print(resto_query['start'])
+    # print(resto_query)
+    # print(resto_query['start'])
     if topic is not 5:
         pass
     else:
@@ -126,7 +133,6 @@ def restaurant(wordslist, topic):
             # return response
         elif resto_query['kashrut'] is None:
             standard_resp = 'what style of food do you like(salad, bistro, fast-food)?'
-            print(wordslist[0])
             if 'yes' in wordslist:
                 resto_query['kashrut'] = True
                 response = standard_resp
@@ -135,14 +141,15 @@ def restaurant(wordslist, topic):
                 response = standard_resp
             else: response = 'its a simple yes or no question'
         elif resto_query['style'] is None:
+            next_topic = 4
             resto_query['style'] = wordslist[0]
-            print(resto_query)
             response = getRestaurant(resto_query)
         
         
         return response, emote, next_topic
 
-        
+def something(wordslist,topic):
+    pass   
 
 
 def noNoWordsDetector(wordslist):

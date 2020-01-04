@@ -48,10 +48,9 @@ def getNews():
     data = requests.get(f'https://api.nytimes.com/svc/mostpopular/v2/viewed/1.json?api-key={key}')
     text = data.json()['results'][0]['title']
     return text
-    
+
 #dont think Im going to do anything with the google api
 def newRestaurant():
     loc = location()
     data = requests.get(f'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyCYHapt9sYDp7gyrQKw1qVdyp4yeVQCwgI&radius=500&types=restaurant&location={loc}')
     print(data.json())
-newRestaurant()

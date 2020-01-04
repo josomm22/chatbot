@@ -25,10 +25,9 @@ def filter_data(restaurant, criteria):
 
 def getRestaurant(criteria):
     del criteria['start']
-    print('criteria is ', criteria)
     results = filter_data(restaurant, criteria)
-    print(results)
     if len(results) == 0:
         return("There are no matching restaurants")
     else:
-        return('According to your choices ', *[d.get('name') for d in results], 'would be a good choice')
+        outro = ' Would you like to get news, the weather or do something else now?'
+        return('According to your choices ' , *[d.get('name') for d in results] , 'would be a good choice', outro)

@@ -1,5 +1,5 @@
 import random
-from api import catFact, jokes, getWeather
+from api import catFact, jokes, getWeather, getNews
 from restaurant import getRestaurant, resto_query
 # string = input('say something')
 
@@ -84,7 +84,9 @@ def news_weather_resto(wordslist, topic):
     resto = ['restaurant','resturant','resto','food','hungry']
     next_topic = 4
     if any(x in wordslist for x in news):
-        response = 'no news today'
+        intro = 'here\'s today\'s headline from the New York Times: '
+        outro = ' would you like to find a restaurant '
+        response = intro + getNews()
         emote = 'takeoff'
     elif any(x in wordslist for x in weather):
         response = getWeather()

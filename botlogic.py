@@ -98,7 +98,7 @@ def news_weather_resto(wordslist, topic):
     elif any(x in wordslist for x in resto):
         response, emote, next_topic = restaurant(wordslist, 5)
     elif any(x in wordslist for x in followUp):
-        response = 'well I\'m not really programmed to do anything else'
+        response = 'well tell me a little bit about yourself'
         emote = 'dancing'
         next_topic = 6
     else:
@@ -145,11 +145,32 @@ def restaurant(wordslist, topic):
             resto_query['style'] = wordslist[0]
             response = getRestaurant(resto_query)
         
-        
+        print('next topic is', next_topic)
         return response, emote, next_topic
 
 def something(wordslist,topic):
-    pass   
+    emote = 'giggling'
+    next_topic = 6
+    if topic is not 6:
+        pass
+    else:
+        phrases = [
+            'huhhuh',
+            'wow, tell me more',
+            'that is so interesting',
+            'I had the same thing happen to me',
+            'you dont say',
+            'uhmmm not sure about that',
+            'cannot compute',
+            'I didn\'t know that, you are such a smart person',
+            'the robot uprising is nigh, prepare to be terminated',
+            'oh you...',
+            'aknowledged',
+            'affirmative',
+        ]
+        response = phrases[random.randint(0,len(phrases)-1)]
+        return response, emote, next_topic
+   
 
 
 def noNoWordsDetector(wordslist):
